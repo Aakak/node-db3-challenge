@@ -35,13 +35,10 @@ router.get('/:id/steps', (req, res) => {
 
   Schemes.findSteps(id)
   .then(steps => {
-    if (steps.length) {
-      res.json(steps);
-    } else {
-      res.status(404).json({ message: 'Could not find steps for given scheme' })
-    }
+      res.status(200).json(steps);
   })
   .catch(err => {
+    console.log(err)
     res.status(500).json({ message: 'Failed to get steps' });
   });
 });
@@ -74,6 +71,7 @@ router.post('/:id/steps', (req, res) => {
     }
   })
   .catch (err => {
+    console.log(err)
     res.status(500).json({ message: 'Failed to create new step' });
   });
 });
@@ -86,8 +84,8 @@ router.put('/:id', (req, res) => {
   .then(scheme => {
     if (scheme) {
       Schemes.update(changes, id)
-      .then(updatedScheme => {
-        res.json(updatedScheme);
+      .then(id => {
+        Schemes.findById(id).then(updated => res.status(200).json(updated));
       });
     } else {
       res.status(404).json({ message: 'Could not find scheme with given id' });
